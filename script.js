@@ -27,13 +27,40 @@ function operate(operator, a, b) {
   }
 }
 
-const display = document.querySelector("#display");
+let operator = "";
+let num1 = 0;
+let num2 = 0;
 
-const buttons = document.querySelectorAll(".button");
+const numberButtons = document.querySelectorAll(".number");
 
-buttons.forEach((button) => button.addEventListener("click", () => {
-    const input = document.createElement("h1");
+numberButtons.forEach((button) =>
+  button.addEventListener("click", () => {
     input.textContent += button.textContent;
-    input.classList.add("input");
-    display.appendChild(input);
-}));
+    if (num1 == 0) {
+      num1 = parseInt(button.textContent);
+    } else {
+      num2 = parseInt(button.textContent);
+    }
+  })
+);
+
+const clearButton = document.querySelector("#clear");
+
+clearButton.addEventListener("click", () => (input.textContent = ""));
+
+const operatorButtons = document.querySelectorAll(".operator");
+
+operatorButtons.forEach((button) =>
+  button.addEventListener("click", () => {
+    operator = button.textContent;
+    input.textContent += button.textContent;
+  })
+);
+
+const equalButton = document.querySelector("#equal");
+
+equalButton.addEventListener("click", () => {
+  input.textContent = operate(operator, num1, num2);
+  num1 = 0;
+  num2 = 0;
+});
