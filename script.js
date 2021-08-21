@@ -39,7 +39,7 @@ function operate(operator, a, b) {
 }
 
 function clear() {
-  input.textContent = "";
+  input.textContent = "0";
   operator = "";
   firstOperand = 0;
   secondOperand = 0;
@@ -53,11 +53,15 @@ numberButtons.forEach((button) =>
       clear();
       autoClear = false;
     }
-    input.textContent += button.textContent;
-    if (!operator) {
-      firstOperand = parseInt(firstOperand + button.textContent);
+    if (input.textContent == "0") {
+      input.textContent = button.textContent;
     } else {
-      secondOperand = parseInt(secondOperand + button.textContent);
+      input.textContent += button.textContent;
+    }
+    if (!operator) {
+      firstOperand = Number(firstOperand + button.textContent);
+    } else {
+      secondOperand = Number(secondOperand + button.textContent);
     }
   })
 );
@@ -74,14 +78,18 @@ operatorButtons.forEach((button) =>
 );
 
 equalButton.addEventListener("click", () => {
-  result = operate(operator, firstOperand, secondOperand);
+  if (operator == "") {
+    result = Number(input.textContent);
+  } else {
+    result = operate(operator, firstOperand, secondOperand);
+  }
   if (result == Infinity) {
     input.textContent = "🤡";
     result = 0;
   } else {
     input.textContent = result;
   }
-  operator = 0;
+  operator = "";
   firstOperand = 0;
   secondOperand = 0;
   autoClear = true;
