@@ -22,7 +22,6 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-  if (b == 0) return "🤡";
   return a / b;
 }
 
@@ -44,6 +43,8 @@ function clear() {
   operator = "";
   firstOperand = 0;
   secondOperand = 0;
+  result = 0;
+  autoClear = false;
 }
 
 numberButtons.forEach((button) =>
@@ -63,8 +64,9 @@ numberButtons.forEach((button) =>
 
 operatorButtons.forEach((button) =>
   button.addEventListener("click", () => {
+    if (input.textContent == "🤡") input.textContent = "0";
     if (!firstOperand && !secondOperand) {
-        firstOperand = result;
+      firstOperand = result;
     }
     operator = button.textContent;
     input.textContent += button.textContent;
@@ -73,7 +75,12 @@ operatorButtons.forEach((button) =>
 
 equalButton.addEventListener("click", () => {
   result = operate(operator, firstOperand, secondOperand);
-  input.textContent = result;
+  if (Number.isNaN(result)) {
+    input.textContent = "🤡";
+    result = 0;
+  } else {
+    input.textContent = result;
+  }
   operator = 0;
   firstOperand = 0;
   secondOperand = 0;
