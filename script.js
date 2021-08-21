@@ -38,9 +38,9 @@ numberButtons.forEach((button) =>
   button.addEventListener("click", () => {
     input.textContent += button.textContent;
     if (num1 == 0) {
-      num1 = parseInt(button.textContent);
+      num1 = parseInt(num1+button.textContent);
     } else {
-      num2 = parseInt(button.textContent);
+      num2 = parseInt(num2+button.textContent);
     }
   })
 );
