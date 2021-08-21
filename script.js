@@ -75,7 +75,7 @@ operatorButtons.forEach((button) =>
 
 equalButton.addEventListener("click", () => {
   result = operate(operator, firstOperand, secondOperand);
-  if (Number.isNaN(result)) {
+  if (result == Infinity) {
     input.textContent = "🤡";
     result = 0;
   } else {
