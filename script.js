@@ -1,6 +1,7 @@
 let operator = "";
 let firstOperand = 0;
 let secondOperand = 0;
+let autoClear = false;
 
 const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
@@ -37,8 +38,19 @@ function operate(operator, a, b) {
   }
 }
 
+function clearScreen() {
+  input.textContent = "";
+  operator = "";
+  firstOperand = 0;
+  secondOperand = 0;
+}
+
 numberButtons.forEach((button) =>
   button.addEventListener("click", () => {
+    if (autoClear) {
+      clearScreen();
+      autoClear = false;
+    }
     input.textContent += button.textContent;
     if (operator == "") {
       firstOperand = parseInt(firstOperand + button.textContent);
@@ -48,12 +60,7 @@ numberButtons.forEach((button) =>
   })
 );
 
-clearButton.addEventListener("click", () => {
-  input.textContent = "";
-  operator = "";
-  firstOperand = 0;
-  secondOperand = 0;
-});
+clearButton.addEventListener("click", clearScreen);
 
 operatorButtons.forEach((button) =>
   button.addEventListener("click", () => {
@@ -64,6 +71,8 @@ operatorButtons.forEach((button) =>
 
 equalButton.addEventListener("click", () => {
   input.textContent = operate(operator, firstOperand, secondOperand);
+  operator = 0;
   firstOperand = 0;
   secondOperand = 0;
+  autoClear = true;
 });
