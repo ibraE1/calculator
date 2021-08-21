@@ -1,3 +1,12 @@
+let operator = "";
+let firstOperand = 0;
+let secondOperand = 0;
+
+const numberButtons = document.querySelectorAll(".number");
+const operatorButtons = document.querySelectorAll(".operator");
+const equalButton = document.querySelector("#equal");
+const clearButton = document.querySelector("#clear");
+
 function add(a, b) {
   return a + b;
 }
@@ -28,28 +37,23 @@ function operate(operator, a, b) {
   }
 }
 
-let operator = "";
-let num1 = 0;
-let num2 = 0;
-
-const numberButtons = document.querySelectorAll(".number");
-
 numberButtons.forEach((button) =>
   button.addEventListener("click", () => {
     input.textContent += button.textContent;
-    if (num1 == 0) {
-      num1 = parseInt(num1+button.textContent);
+    if (operator == "") {
+      firstOperand = parseInt(firstOperand + button.textContent);
     } else {
-      num2 = parseInt(num2+button.textContent);
+      secondOperand = parseInt(secondOperand + button.textContent);
     }
   })
 );
 
-const clearButton = document.querySelector("#clear");
-
-clearButton.addEventListener("click", () => (input.textContent = ""));
-
-const operatorButtons = document.querySelectorAll(".operator");
+clearButton.addEventListener("click", () => {
+  input.textContent = "";
+  operator = "";
+  firstOperand = 0;
+  secondOperand = 0;
+});
 
 operatorButtons.forEach((button) =>
   button.addEventListener("click", () => {
@@ -58,10 +62,8 @@ operatorButtons.forEach((button) =>
   })
 );
 
-const equalButton = document.querySelector("#equal");
-
 equalButton.addEventListener("click", () => {
-  input.textContent = operate(operator, num1, num2);
-  num1 = 0;
-  num2 = 0;
+  input.textContent = operate(operator, firstOperand, secondOperand);
+  firstOperand = 0;
+  secondOperand = 0;
 });
