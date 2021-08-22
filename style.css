@@ -13,6 +13,7 @@
   border: 2px solid black;
   background-color: grey;
   border-radius: 10px;
+  row-gap: 5px;
 }
 
 #display {

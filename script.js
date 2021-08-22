@@ -41,6 +41,7 @@ function updateScreen() {
 }
 
 function pressNumber(value) {
+  if (displayValue == "🤡") clear();
   if (!currentOperator) firstOperand = Number(firstOperand + value);
   else secondOperand = Number(secondOperand + value);
   displayValue += value;
