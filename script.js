@@ -38,7 +38,7 @@ function operate(operator, a, b) {
 
 function updateScreen() {
   displayValue = displayValue.toString().replace("Infinity", "🤡");
-  display.textContent = displayValue;
+  display.textContent = displayValue == "" ? "0" : displayValue;
 }
 
 function pressNumber(value) {
