@@ -1,13 +1,11 @@
-let operator = "";
-let firstOperand = 0;
-let secondOperand = 0;
-let result = 0;
-let autoClear = false;
+let currentOperator = null;
+let firstOperand = null;
+let secondOperand = null;
+let result = null;
+let displayValue = "";
 
-const numberButtons = document.querySelectorAll(".number");
-const operatorButtons = document.querySelectorAll(".operator");
-const equalButton = document.querySelector("#equal");
-const clearButton = document.querySelector("#clear");
+const allButtons = document.querySelectorAll("button");
+const display = document.querySelector("#input");
 
 function add(a, b) {
   return a + b;
@@ -38,61 +36,47 @@ function operate(operator, a, b) {
   }
 }
 
-function clear() {
-  input.textContent = "0";
-  operator = "";
-  firstOperand = 0;
-  secondOperand = 0;
-  result = 0;
-  autoClear = false;
+function updateScreen() {
+  display.textContent = displayValue;
 }
 
-numberButtons.forEach((button) =>
+function pressNumber(value) {
+  if (!currentOperator) firstOperand = Number(value);
+  else secondOperand = Number(value);
+  displayValue += value;
+}
+
+function pressOperator(value) {
+  if (firstOperand && secondOperand) pressEqual();
+  if (result) firstOperand = result;
+  currentOperator = value;
+  displayValue += value;
+}
+
+function pressEqual() {
+  result = operate(currentOperator, firstOperand, secondOperand);
+  displayValue = result;
+}
+
+function clear() {
+  currentOperator = null;
+  firstOperand = null;
+  secondOperand = null;
+  result = null;
+  displayValue = "";
+}
+
+allButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    if (autoClear && !operator) {
+    if (button.id == "clear") {
       clear();
-      autoClear = false;
-    }
-    if (input.textContent == "0") {
-      input.textContent = button.textContent;
+    } else if (button.id == "equal") {
+      pressEqual();
+    } else if (button.className == "operator") {
+      pressOperator(button.textContent);
     } else {
-      input.textContent += button.textContent;
+      pressNumber(button.textContent);
     }
-    if (!operator) {
-      firstOperand = Number(firstOperand + button.textContent);
-    } else {
-      secondOperand = Number(secondOperand + button.textContent);
-    }
-  })
-);
-
-operatorButtons.forEach((button) =>
-  button.addEventListener("click", () => {
-    if (input.textContent == "🤡") input.textContent = "0";
-    if (!firstOperand && !secondOperand) {
-      firstOperand = result;
-    }
-    operator = button.textContent;
-    input.textContent += button.textContent;
-  })
-);
-
-equalButton.addEventListener("click", () => {
-  if (operator == "") {
-    result = Number(input.textContent);
-  } else {
-    result = operate(operator, firstOperand, secondOperand);
-  }
-  if (result == Infinity) {
-    input.textContent = "🤡";
-    result = 0;
-  } else {
-    input.textContent = result;
-  }
-  operator = "";
-  firstOperand = 0;
-  secondOperand = 0;
-  autoClear = true;
+    updateScreen();
+  });
 });
-
-clearButton.addEventListener("click", clear);
