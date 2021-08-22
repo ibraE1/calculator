@@ -1,7 +1,6 @@
-let currentOperator = null;
-let firstOperand = null;
-let secondOperand = null;
-let result = null;
+let currentOperator = "";
+let firstOperand = 0;
+let secondOperand = 0;
 let displayValue = "";
 
 const allButtons = document.querySelectorAll("button");
@@ -42,32 +41,34 @@ function updateScreen() {
 }
 
 function pressNumber(value) {
-  if (!currentOperator) firstOperand = Number(value);
-  else secondOperand = Number(value);
+  if (!currentOperator) firstOperand = Number(firstOperand + value);
+  else secondOperand = Number(secondOperand + value);
   displayValue += value;
 }
 
 function pressOperator(value) {
-  if (firstOperand) pressEqual();
-  if (result) firstOperand = result;
+  if (firstOperand || secondOperand) {
+    pressEqual();
+  }
   currentOperator = value == "÷" ? "/" : value == "X" ? "*" : value;
   displayValue += value;
 }
 
 function pressEqual() {
   if (currentOperator) {
-    result = operate(currentOperator, firstOperand, secondOperand);
-    displayValue = result;
+    firstOperand = operate(currentOperator, firstOperand, secondOperand);
+    secondOperand = 0;
+    currentOperator = "";
+    displayValue = firstOperand;
   } else {
     displayValue = firstOperand;
   }
 }
 
 function clear() {
-  currentOperator = null;
-  firstOperand = null;
-  secondOperand = null;
-  result = null;
+  currentOperator = "";
+  firstOperand = 0;
+  secondOperand = 0;
   displayValue = "";
 }
 
