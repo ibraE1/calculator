@@ -50,7 +50,7 @@ function pressNumber(value) {
 function pressOperator(value) {
   if (firstOperand) pressEqual();
   if (result) firstOperand = result;
-  currentOperator = value;
+  currentOperator = value == "÷" ? "/" : value == "X" ? "*" : value;
   displayValue += value;
 }
 
