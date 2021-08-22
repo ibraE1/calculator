@@ -37,6 +37,7 @@ function operate(operator, a, b) {
 }
 
 function updateScreen() {
+  displayValue = displayValue.toString().replace("Infinity", "🤡");
   display.textContent = displayValue;
 }
 
@@ -47,15 +48,19 @@ function pressNumber(value) {
 }
 
 function pressOperator(value) {
-  if (firstOperand && secondOperand) pressEqual();
+  if (firstOperand) pressEqual();
   if (result) firstOperand = result;
   currentOperator = value;
   displayValue += value;
 }
 
 function pressEqual() {
-  result = operate(currentOperator, firstOperand, secondOperand);
-  displayValue = result;
+  if (currentOperator) {
+    result = operate(currentOperator, firstOperand, secondOperand);
+    displayValue = result;
+  } else {
+    displayValue = firstOperand;
+  }
 }
 
 function clear() {
