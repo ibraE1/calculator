@@ -36,6 +36,7 @@ function operate(operator, a, b) {
 }
 
 function updateScreen() {
+  displayValue = displayValue.toString().replace("-Infinity", "🤡");
   displayValue = displayValue.toString().replace("Infinity", "🤡");
   displayValue = displayValue.toString().replace("NaN", "🤡");
   display.textContent = displayValue == "" ? "0" : displayValue;
