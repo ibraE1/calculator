@@ -53,7 +53,7 @@ function pressOperator(value) {
   if (firstOperand || secondOperand) {
     pressEqual();
   }
-  currentOperator = value == "÷" ? "/" : value == "X" ? "*" : value;
+  currentOperator = value == "÷" ? "/" : value == "x" ? "*" : value;
   displayValue += value;
 }
 
