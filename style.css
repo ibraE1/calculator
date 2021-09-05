@@ -1,17 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=PT+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap");
+
 * {
   padding: 0;
-  border: none;
-  background: none;
+  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@font-face {
-  font-family: Digi;
-  src: url(digi.ttf);
+body {
+  height: 600px;
+  padding: 10px 0 5px 0;
+  background-color: #e8e9ed;
+  opacity: 1;
+  background-image: radial-gradient(#607196 0.5px, transparent 0.5px),
+    radial-gradient(#607196 0.5px, #e8e9ed 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
-body {
-  background-color: #E1E1E1;
+header h1 {
+  font-size: 40px;
+  font-style: italic;
+  color: #ff7b9c;
+  text-shadow: 1px 1px #cc0033;
 }
 
 #calculator {
@@ -22,7 +37,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #607196;
-  border-radius: 3px;
+  border-radius: 5px;
   box-shadow: 0px 4px #384257, 0px 10px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -33,16 +48,17 @@ body {
   align-items: center;
   background-color: #e8e9ed;
   border-radius: 3px;
-  margin-bottom: 10px;
-  box-shadow: inset 0px 4px #989DAE;
+  margin-bottom: 15px;
+  box-shadow: inset 0px 4px #989dae;
 }
 
 #input {
-  padding-left: 20px;
-  font-family: Digi;
+  width: 360px;
+  padding: 0 20px 0;
+  font-family: "PT Mono", monospace;
 }
 
-#buttons-container {
+#buttons {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(4, 1fr);
@@ -52,21 +68,23 @@ body {
 }
 
 button {
+  border: none;
+  font-family: "Cairo", sans-serif;
   font-size: 24px;
   border-radius: 3px;
   background-color: #babfd1;
-  box-shadow: 0px 4px #858DAD;
+  box-shadow: 0px 4px #858dad;
   transition: all 0.2s ease;
 }
 
 #clear {
   background-color: #ffc759;
-  box-shadow: 0px 4px #CC8800;
+  box-shadow: 0px 4px #cc8800;
 }
 
 #delete {
   background-color: #ffc759;
-  box-shadow: 0px 4px #CC8800;
+  box-shadow: 0px 4px #cc8800;
 }
 
 #equal {
@@ -83,16 +101,16 @@ button:hover {
   font-size: 24px;
   border-radius: 3px;
   background-color: #ff7b9c;
-  box-shadow: 0px 4px #CC0033;
+  box-shadow: 0px 4px #cc0033;
 }
 
 #clear:hover {
-  box-shadow: 0px 4px #CC0033;
+  box-shadow: 0px 4px #cc0033;
   background-color: #ff7b9c;
 }
 
 #delete:hover {
-  box-shadow: 0px 4px #CC0033;
+  box-shadow: 0px 4px #cc0033;
   background-color: #ff7b9c;
 }
 
@@ -102,19 +120,19 @@ button:active {
   font-size: 24px;
   border-radius: 3px;
   background-color: #ff7b9c;
-  box-shadow: 0px 0px #CC0033;
+  box-shadow: 0px 0px #cc0033;
 }
 
 #clear:active {
   margin-bottom: -4px;
   margin-top: 4px;
-  box-shadow: 0px 0px #CC0033;
+  box-shadow: 0px 0px #cc0033;
   background-color: #ff7b9c;
 }
 
 #delete:active {
   margin-top: 4px;
   margin-bottom: -4px;
-  box-shadow: 0px 0px #CC0033;
+  box-shadow: 0px 0px #cc0033;
   background-color: #ff7b9c;
 }

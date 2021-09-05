@@ -1,91 +1,120 @@
-let currentOperator = "";
-let firstOperand = 0;
-let secondOperand = 0;
-let displayValue = "";
+const calculator = (() => {
+  const add = (a, b) => a + b;
+  const subtract = (a, b) => a - b;
+  const multiply = (a, b) => a * b;
+  const divide = (a, b) => a / b;
 
-const allButtons = document.querySelectorAll("button");
-const display = document.querySelector("#input");
+  return { add, subtract, multiply, divide };
+})();
 
-function add(a, b) {
-  return a + b;
-}
+const displayController = (() => {
+  const display = document.querySelector("#display");
+  const input = document.createElement("h1");
+  input.id = "input";
+  input.textContent = "";
 
-function subtract(a, b) {
-  return a - b;
-}
+  const buttons = document.querySelectorAll("button");
 
-function multiply(a, b) {
-  return a * b;
-}
-
-function divide(a, b) {
-  return a / b;
-}
-
-function operate(operator, a, b) {
-  switch (operator) {
-    case "+":
-      return add(a, b);
-    case "-":
-      return subtract(a, b);
-    case "*":
-      return multiply(a, b);
-    case "/":
-      return divide(a, b);
-  }
-}
-
-function updateScreen() {
-  displayValue = displayValue.toString().replace("-Infinity", "🤡");
-  displayValue = displayValue.toString().replace("Infinity", "🤡");
-  displayValue = displayValue.toString().replace("NaN", "🤡");
-  display.textContent = displayValue == "" ? "0" : displayValue;
-}
-
-function pressNumber(value) {
-  if (displayValue == "🤡") clear();
-  if (!currentOperator) firstOperand = Number(firstOperand + value);
-  else secondOperand = Number(secondOperand + value);
-  displayValue += value;
-}
-
-function pressOperator(value) {
-  if (firstOperand || secondOperand) {
-    pressEqual();
-  }
-  currentOperator = value == "÷" ? "/" : value == "x" ? "*" : value;
-  displayValue += value;
-}
-
-function pressEqual() {
-  if (currentOperator) {
-    firstOperand = operate(currentOperator, firstOperand, secondOperand);
-    secondOperand = 0;
-    currentOperator = "";
-    displayValue = firstOperand;
-  } else {
-    displayValue = firstOperand;
-  }
-}
-
-function clear() {
-  currentOperator = "";
-  firstOperand = 0;
-  secondOperand = 0;
-  displayValue = "";
-}
-
-allButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    if (button.id == "clear") {
-      clear();
-    } else if (button.id == "equal") {
-      pressEqual();
-    } else if (button.className == "operator") {
-      pressOperator(button.textContent);
-    } else {
-      pressNumber(button.textContent);
-    }
-    updateScreen();
+  buttons.forEach((button) => {
+    button.addEventListener("click", () =>
+      buttonController.pressButton(button)
+    );
   });
-});
+
+  const updateDisplay = (value) => {
+    input.textContent = value;
+    display.appendChild(input);
+  };
+
+  const clearDisplay = () => {
+    updateDisplay("");
+  };
+
+  const addToDisplay = (button) => {
+    updateDisplay((input.textContent += button.textContent));
+  };
+
+  const deleteCharacter = () => {
+    updateDisplay(input.textContent.slice(0, -1));
+  };
+
+  updateDisplay();
+
+  return {
+    updateDisplay,
+    clearDisplay,
+    addToDisplay,
+    deleteCharacter,
+  };
+})();
+
+const buttonController = (() => {
+  let firstOperand = "";
+  let secondOperand = "";
+  let operator = "";
+  let solution = "";
+
+  const pressButton = (button) => {
+    switch (button.id) {
+      case "clear":
+        displayController.clearDisplay();
+        firstOperand = "";
+        secondOperand = "";
+        operator = "";
+        solution = "";
+        break;
+      case "delete":
+        displayController.deleteCharacter();
+        break;
+      case "equal":
+        operate(firstOperand, secondOperand, operator);
+        break;
+      default:
+        if (button.className == "operator") {
+          if (secondOperand) {
+            operate(firstOperand, secondOperand, operator);
+            firstOperand = "" + solution;
+            secondOperand = "";
+          }
+          operator =
+            button.textContent == "÷"
+              ? "/"
+              : button.textContent == "x"
+              ? "*"
+              : button.textContent;
+        } else {
+          if (operator) {
+            secondOperand += button.textContent;
+          } else {
+            firstOperand += button.textContent;
+          }
+        }
+        displayController.addToDisplay(button);
+    }
+  };
+
+  const operate = (firstOperand, secondOperand, operator) => {
+    displayController.clearDisplay();
+    firstOperand = Number(firstOperand);
+    secondOperand = Number(secondOperand);
+
+    switch (operator) {
+      case "+":
+        solution = calculator.add(firstOperand, secondOperand);
+        break;
+      case "-":
+        solution = calculator.subtract(firstOperand, secondOperand);
+        break;
+      case "/":
+        solution = calculator.divide(firstOperand, secondOperand);
+        break;
+      case "*":
+        solution = calculator.multiply(firstOperand, secondOperand);
+        break;
+    }
+
+    displayController.updateDisplay(solution.toFixed(17));
+  };
+
+  return { pressButton };
+})();
