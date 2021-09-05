@@ -67,7 +67,11 @@ const buttonController = (() => {
         displayController.deleteCharacter();
         break;
       case "equal":
-        operate(firstOperand, secondOperand, operator);
+        if (operator) operate(firstOperand, secondOperand, operator);
+        else {
+          solution = firstOperand;
+          displayController.updateDisplay(solution);
+        }
         break;
       default:
         if (button.className == "operator") {
@@ -113,10 +117,33 @@ const buttonController = (() => {
         break;
     }
 
-    if (solution.length >= 18) solution = Math.round(solution * 10**17) / 10**17;
+    if (solution.length >= 18)
+      solution = Math.round(solution * 10 ** 17) / 10 ** 17;
 
     displayController.updateDisplay(solution);
   };
 
   return { pressButton };
+})();
+
+const keyboardController = (() => {
+  document.addEventListener("keydown", (e) => {
+    const pressedKey =
+      e.key == "Enter"
+        ? "="
+        : e.key == "Backspace"
+        ? "DEL"
+        : e.key == "Escape"
+        ? "AC"
+        : e.key == "/"
+        ? "÷"
+        : e.key == "*"
+        ? "x"
+        : e.key;
+    Array.from(document.querySelectorAll("button")).forEach((button) => {
+      if (button.textContent == pressedKey) {
+        buttonController.pressButton(button);
+      }
+    });
+  });
 })();
