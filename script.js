@@ -9,9 +9,9 @@ const calculator = (() => {
 
 const displayController = (() => {
   const display = document.querySelector("#display");
-  const input = document.createElement("h1");
-  input.id = "input";
-  input.textContent = "";
+  const expression = document.createElement("h1");
+  expression.id = "expression";
+  expression.textContent = "";
 
   const buttons = document.querySelectorAll("button");
 
@@ -22,8 +22,8 @@ const displayController = (() => {
   });
 
   const updateDisplay = (value) => {
-    input.textContent = value;
-    display.appendChild(input);
+    expression.textContent = value;
+    display.appendChild(expression);
   };
 
   const clearDisplay = () => {
@@ -31,11 +31,11 @@ const displayController = (() => {
   };
 
   const addToDisplay = (button) => {
-    updateDisplay((input.textContent += button.textContent));
+    updateDisplay((expression.textContent += button.textContent));
   };
 
   const deleteCharacter = () => {
-    updateDisplay(input.textContent.slice(0, -1));
+    updateDisplay(expression.textContent.slice(0, -1));
   };
 
   updateDisplay();
@@ -113,7 +113,9 @@ const buttonController = (() => {
         break;
     }
 
-    displayController.updateDisplay(solution.toFixed(17));
+    if (solution.length >= 18) solution = Math.round(solution * 10**17) / 10**17;
+
+    displayController.updateDisplay(solution);
   };
 
   return { pressButton };
