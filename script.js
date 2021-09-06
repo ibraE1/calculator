@@ -41,7 +41,9 @@ const displayController = (() => {
   };
 
   const deleteCharacter = () => {
+    const sliced = expression.textContent.slice(-1);
     updateDisplay(expression.textContent.slice(0, -1));
+    return sliced;
   };
 
   updateDisplay();
@@ -71,7 +73,21 @@ const buttonController = (() => {
         solution = "";
         break;
       case "delete":
-        displayController.deleteCharacter();
+        let lastCharacter = displayController.deleteCharacter();
+        switch (lastCharacter) {
+          case "+":
+          case "-":
+          case "x":
+          case "÷":
+            operator = "";
+            break;
+          default:
+            if (operator) {
+              secondOperand = secondOperand.slice(0, -1);
+            } else {
+              firstOperand = firstOperand.slice(0, -1);
+            }
+        }
         break;
       case "equal":
         if (secondOperand) operate(firstOperand, secondOperand, operator);
@@ -92,8 +108,9 @@ const buttonController = (() => {
                 .getDisplay()
                 .substring(displayController.getDisplay().indexOf(operator) + 1)
                 .includes(".")
-            )
+            ) {
               break;
+            }
           } else break;
         }
       default:
@@ -103,12 +120,7 @@ const buttonController = (() => {
             firstOperand = "" + solution;
             secondOperand = "";
           }
-          operator =
-            button.textContent == "÷"
-              ? "/"
-              : button.textContent == "x"
-              ? "*"
-              : button.textContent;
+          operator = button.textContent;
         } else {
           if (operator) {
             secondOperand += button.textContent;
@@ -132,10 +144,10 @@ const buttonController = (() => {
       case "-":
         solution = calculator.subtract(firstOperand, secondOperand);
         break;
-      case "/":
+      case "÷":
         solution = calculator.divide(firstOperand, secondOperand);
         break;
-      case "*":
+      case "x":
         solution = calculator.multiply(firstOperand, secondOperand);
         break;
     }
