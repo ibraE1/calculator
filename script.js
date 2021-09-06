@@ -16,6 +16,10 @@ const displayController = (() => {
   const buttons = document.querySelectorAll("button");
 
   buttons.forEach((button) => {
+    button.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      e.target.click();
+    });
     button.addEventListener("click", () =>
       buttonController.pressButton(button)
     );
