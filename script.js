@@ -21,6 +21,8 @@ const displayController = (() => {
     );
   });
 
+  const getDisplay = () => expression.textContent;
+
   const updateDisplay = (value) => {
     expression.textContent = value;
     display.appendChild(expression);
@@ -41,6 +43,7 @@ const displayController = (() => {
   updateDisplay();
 
   return {
+    getDisplay,
     updateDisplay,
     clearDisplay,
     addToDisplay,
@@ -67,12 +70,28 @@ const buttonController = (() => {
         displayController.deleteCharacter();
         break;
       case "equal":
-        if (operator) operate(firstOperand, secondOperand, operator);
+        if (secondOperand) operate(firstOperand, secondOperand, operator);
         else {
           solution = firstOperand;
           displayController.updateDisplay(solution);
         }
         break;
+      case "dot":
+        if (displayController.getDisplay().includes(".")) {
+          if (
+            ["+", "-", "x", "÷"].some((operator) =>
+              displayController.getDisplay().includes(operator)
+            )
+          ) {
+            if (
+              displayController
+                .getDisplay()
+                .substring(displayController.getDisplay().indexOf(operator) + 1)
+                .includes(".")
+            )
+              break;
+          } else break;
+        }
       default:
         if (button.className == "operator") {
           if (secondOperand) {
@@ -117,7 +136,7 @@ const buttonController = (() => {
         break;
     }
 
-    if (solution.length >= 18)
+    if (solution.toString().length >= 18)
       solution = Math.round(solution * 10 ** 17) / 10 ** 17;
 
     displayController.updateDisplay(solution);
