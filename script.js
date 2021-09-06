@@ -97,6 +97,7 @@ const buttonController = (() => {
         }
         break;
       case "dot":
+        if (displayController.getDisplay().length > 17) break;
         if (displayController.getDisplay().includes(".")) {
           if (
             ["+", "-", "x", "÷"].some((operator) =>
@@ -114,6 +115,7 @@ const buttonController = (() => {
           } else break;
         }
       default:
+        if (displayController.getDisplay().length > 17) break;
         if (button.className == "operator") {
           if (secondOperand) {
             operate(firstOperand, secondOperand, operator);
