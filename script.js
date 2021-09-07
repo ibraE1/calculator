@@ -4,7 +4,43 @@ const calculator = (() => {
   const multiply = (a, b) => a * b;
   const divide = (a, b) => a / b;
 
-  return { add, subtract, multiply, divide };
+  const evaluateExpression = (expression) => {
+    let firstOperand;
+    let secondOperand;
+    let operator = ["+", "-", "x", "÷"].find((sign) =>
+      expression.includes(sign)
+    );
+    firstOperand = Number(
+      expression.substring(0, expression.indexOf(operator))
+    );
+    secondOperand = Number(
+      expression.substring(expression.indexOf(operator) + 1)
+    );
+    return operate(firstOperand, secondOperand, operator);
+  };
+
+  const operate = (firstOperand, secondOperand, operator) => {
+    let solution;
+
+    switch (operator) {
+      case "+":
+        solution = add(firstOperand, secondOperand);
+        break;
+      case "-":
+        solution = subtract(firstOperand, secondOperand);
+        break;
+      case "÷":
+        solution = divide(firstOperand, secondOperand);
+        break;
+      case "x":
+        solution = multiply(firstOperand, secondOperand);
+        break;
+    }
+
+    return solution;
+  };
+
+  return { evaluateExpression };
 })();
 
 const displayController = (() => {
@@ -16,10 +52,6 @@ const displayController = (() => {
   const buttons = document.querySelectorAll("button");
 
   buttons.forEach((button) => {
-    button.addEventListener("touchmove", (e) => {
-      e.preventDefault();
-      e.target.click();
-    });
     button.addEventListener("click", () =>
       buttonController.pressButton(button)
     );
@@ -41,9 +73,7 @@ const displayController = (() => {
   };
 
   const deleteCharacter = () => {
-    const sliced = expression.textContent.slice(-1);
     updateDisplay(expression.textContent.slice(0, -1));
-    return sliced;
   };
 
   updateDisplay();
@@ -58,106 +88,33 @@ const displayController = (() => {
 })();
 
 const buttonController = (() => {
-  let firstOperand = "";
-  let secondOperand = "";
-  let operator = "";
-  let solution = "";
-
   const pressButton = (button) => {
     switch (button.id) {
       case "clear":
         displayController.clearDisplay();
-        firstOperand = "";
-        secondOperand = "";
-        operator = "";
-        solution = "";
         break;
       case "delete":
-        let lastCharacter = displayController.deleteCharacter();
-        switch (lastCharacter) {
-          case "+":
-          case "-":
-          case "x":
-          case "÷":
-            operator = "";
-            break;
-          default:
-            if (operator) {
-              secondOperand = secondOperand.slice(0, -1);
-            } else {
-              firstOperand = firstOperand.slice(0, -1);
-            }
-        }
+        displayController.deleteCharacter();
         break;
       case "equal":
-        if (secondOperand) operate(firstOperand, secondOperand, operator);
-        else {
-          solution = firstOperand;
-          displayController.updateDisplay(solution);
-        }
+        displayController.updateDisplay(
+          calculator.evaluateExpression(displayController.getDisplay())
+        );
         break;
       case "dot":
-        if (displayController.getDisplay().length > 17) break;
-        if (displayController.getDisplay().includes(".")) {
-          if (
-            ["+", "-", "x", "÷"].some((operator) =>
-              displayController.getDisplay().includes(operator)
-            )
-          ) {
-            if (
-              displayController
-                .getDisplay()
-                .substring(displayController.getDisplay().indexOf(operator) + 1)
-                .includes(".")
-            ) {
-              break;
-            }
-          } else break;
-        }
       default:
-        if (displayController.getDisplay().length > 17) break;
         if (button.className == "operator") {
-          if (secondOperand) {
-            operate(firstOperand, secondOperand, operator);
-            firstOperand = "" + solution;
-            secondOperand = "";
-          }
-          operator = button.textContent;
-        } else {
-          if (operator) {
-            secondOperand += button.textContent;
-          } else {
-            firstOperand += button.textContent;
-          }
+          if (
+            ["+", "-", "x", "÷"].some((sign) =>
+              displayController.getDisplay().includes(sign)
+            )
+          )
+            displayController.updateDisplay(
+              calculator.evaluateExpression(displayController.getDisplay())
+            );
         }
         displayController.addToDisplay(button);
     }
-  };
-
-  const operate = (firstOperand, secondOperand, operator) => {
-    displayController.clearDisplay();
-    firstOperand = Number(firstOperand);
-    secondOperand = Number(secondOperand);
-
-    switch (operator) {
-      case "+":
-        solution = calculator.add(firstOperand, secondOperand);
-        break;
-      case "-":
-        solution = calculator.subtract(firstOperand, secondOperand);
-        break;
-      case "÷":
-        solution = calculator.divide(firstOperand, secondOperand);
-        break;
-      case "x":
-        solution = calculator.multiply(firstOperand, secondOperand);
-        break;
-    }
-
-    if (solution.toString().length >= 18)
-      solution = Math.round(solution * 10 ** 17) / 10 ** 17;
-
-    displayController.updateDisplay(solution);
   };
 
   return { pressButton };
