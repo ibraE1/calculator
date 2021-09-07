@@ -5,17 +5,19 @@ const calculator = (() => {
   const divide = (a, b) => a / b;
 
   const evaluateExpression = (expression) => {
-    let firstOperand;
-    let secondOperand;
     let operator = ["+", "-", "x", "÷"].find((sign) =>
       expression.includes(sign)
     );
-    firstOperand = Number(
+    let firstOperand = Number(
       expression.substring(0, expression.indexOf(operator))
     );
-    secondOperand = Number(
+    let secondOperand = Number(
       expression.substring(expression.indexOf(operator) + 1)
     );
+
+    if (!operator) return expression;
+    if (expression.substring(expression.length - 1) == operator)
+      return expression.slice(0, -1);
     return operate(firstOperand, secondOperand, operator);
   };
 
@@ -88,6 +90,22 @@ const displayController = (() => {
 })();
 
 const buttonController = (() => {
+  const checkDots = () => {
+    const expression = displayController.getDisplay();
+    const containsOperator = ["+", "-", "x", "÷"].some((sign) =>
+      expression.includes(sign)
+    );
+    const operatorIndex = ["+", "-", "x", "÷"].findIndex((sign) =>
+      expression.includes(sign)
+    );
+    const secondOperand = expression.substring(operatorIndex + 1);
+    if (expression.indexOf(".") != expression.lastIndexOf(".")) return true;
+    if (containsOperator && secondOperand.includes(".")) return true;
+    if (!containsOperator && expression.includes(".")) return true;
+
+    return false;
+  };
+
   const pressButton = (button) => {
     switch (button.id) {
       case "clear":
@@ -102,7 +120,9 @@ const buttonController = (() => {
         );
         break;
       case "dot":
+        if (checkDots()) break;
       default:
+        if (displayController.getDisplay().length > 17) break;
         if (button.className == "operator") {
           if (
             ["+", "-", "x", "÷"].some((sign) =>
